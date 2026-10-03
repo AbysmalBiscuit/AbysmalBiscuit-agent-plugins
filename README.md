@@ -1,8 +1,8 @@
-# AbysmalBiscuit-plugins
+# AbysmalBiscuit-agent-plugins
 
 The `abysmalbiscuit` marketplace: one place to install Lev's agent plugins, and the third-party plugins he uses, into Claude Code and Codex.
 
-Each plugin lives in its own repo; this repo only lists them in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Claude Code reads that file natively and Codex falls back to it, so both CLIs share one manifest. Entries track each plugin's default branch, so a push to a plugin repo reaches the next install or update.
+Each plugin lives in its own repo; this repo only lists them in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Claude Code reads that file natively and Codex falls back to it, so both CLIs share one manifest. Entries track each plugin's default branch. A fresh install always gets the latest commit, and Codex reinstalls from a fresh clone, but Claude Code's `plugin update` only moves to new code when the `version` in the plugin's `plugin.json` changes. Bump that version with every release that should reach existing Claude installs.
 
 | Plugin | Default | What it is |
 |---|---|---|
@@ -15,13 +15,13 @@ Each plugin lives in its own repo; this repo only lists them in [`.claude-plugin
 ## Install anywhere: `install.sh`
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-plugins/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.sh | bash
 ```
 
 For each of `claude` and `codex` on PATH it registers the marketplace and installs the default plugins. It also installs the devkit and mcpls release binaries, which those plugins run, when they are not already on PATH. Name plugins to install only those:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-plugins/main/install.sh | bash -s -- pr-crucible
+curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.sh | bash -s -- pr-crucible
 ```
 
 The script installs; it does not update. Use the CLI commands below to update.
@@ -29,7 +29,7 @@ The script installs; it does not update. Use the CLI commands below to update.
 ## Claude Code
 
 ```bash
-claude plugin marketplace add AbysmalBiscuit/AbysmalBiscuit-plugins
+claude plugin marketplace add AbysmalBiscuit/AbysmalBiscuit-agent-plugins
 claude plugin install devkit@abysmalbiscuit
 ```
 
@@ -43,7 +43,7 @@ Commit this to `.claude/settings.json` in a repo opened on the web:
 {
   "extraKnownMarketplaces": {
     "abysmalbiscuit": {
-      "source": { "source": "github", "repo": "AbysmalBiscuit/AbysmalBiscuit-plugins" }
+      "source": { "source": "github", "repo": "AbysmalBiscuit/AbysmalBiscuit-agent-plugins" }
     }
   },
   "enabledPlugins": {
@@ -60,7 +60,7 @@ If plugins do not load there, run `install.sh` from a `SessionStart` hook instea
 ## Codex
 
 ```bash
-codex plugin marketplace add AbysmalBiscuit/AbysmalBiscuit-plugins
+codex plugin marketplace add AbysmalBiscuit/AbysmalBiscuit-agent-plugins
 codex plugin add devkit@abysmalbiscuit
 ```
 
