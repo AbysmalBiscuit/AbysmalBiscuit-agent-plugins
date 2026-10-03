@@ -9,23 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
 
       - name: Validate marketplace manifest
         run: |
           curl -fsSL https://claude.ai/install.sh | bash
           ~/.local/bin/claude plugin validate .claude-plugin/marketplace.json
 
-      - name: install.sh names only listed plugins
+      - name: Lint install.py
         run: |
-          eval "$(sed -n -E '/^readonly (DEFAULT_PLUGINS|NEEDS_BINARY)=/p' install.sh)"
-          missing=$(jq -r '$ARGS.positional - [.plugins[].name] | join(" ")' \
-            .claude-plugin/marketplace.json --args "${DEFAULT_PLUGINS[@]}" "${NEEDS_BINARY[@]}")
-          if [[ -n $missing ]]; then
-            echo "::error file=install.sh::not in the marketplace manifest: $missing"
-            exit 1
-          fi
+          uvx ruff check
+          uvx ruff format --check
 
-      - name: Lint install.sh
-        run: |
-          shellcheck install.sh
-          go run mvdan.cc/sh/v3/cmd/shfmt@latest -d install.sh
+      - name: Test install.py
+        run: uv run --no-project --python 3.9 --with pytest pytest -q

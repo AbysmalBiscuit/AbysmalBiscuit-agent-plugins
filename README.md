@@ -12,17 +12,19 @@ Each plugin lives in its own repo; this repo only lists them in [`.claude-plugin
 | [superpowers](https://github.com/obra/superpowers) | yes | Skills library: TDD, debugging, planning, collaboration workflows |
 | [pr-crucible](https://github.com/AbysmalBiscuit/pr-crucible) | no | Staged, evidence-backed, adversarial PR review |
 
-## Install anywhere: `install.sh`
+## Install anywhere: `install.py`
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.py | python3 -
 ```
 
 For each of `claude` and `codex` on PATH it registers the marketplace and installs the default plugins. It also installs the devkit and mcpls release binaries, which those plugins run, when they are not already on PATH. Name plugins to install only those:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.sh | bash -s -- pr-crucible
+curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.py | python3 - pr-crucible
 ```
+
+It needs Python 3.9 or newer and nothing outside the standard library. The binary downloads, the Claude installs, and the Codex installs run concurrently. Within one CLI, plugins install one at a time: concurrent installs into the same CLI overwrite each other's config writes and silently drop plugins.
 
 The script installs; it does not update. Use the CLI commands below to update.
 
@@ -55,7 +57,7 @@ Commit this to `.claude/settings.json` in a repo opened on the web:
 }
 ```
 
-If plugins do not load there, run `install.sh` from a `SessionStart` hook instead.
+If plugins do not load there, run `install.py` from a `SessionStart` hook instead.
 
 ## Codex
 
@@ -68,8 +70,8 @@ Update with `codex plugin marketplace upgrade abysmalbiscuit`, then remove and r
 
 ### Codex cloud
 
-Add the `install.sh` line to the environment's setup script.
+Add the `install.py` line to the environment's setup script.
 
 ## Adding a plugin
 
-Add an entry to `.claude-plugin/marketplace.json`. Use only `git-subdir` (plugin in a subdirectory) or `url` (plugin at the repo root) sources: both CLIs understand them, while Codex skips Claude's `github` source type. Add the plugin to `DEFAULT_PLUGINS` in `install.sh` if every environment should get it, and to `NEEDS_BINARY` if it runs a binary published as a cargo-dist release. CI validates the manifest and checks that `install.sh` names only listed plugins.
+Add an entry to `.claude-plugin/marketplace.json`. Use only `git-subdir` (plugin in a subdirectory) or `url` (plugin at the repo root) sources: both CLIs understand them, while Codex skips Claude's `github` source type. Add the plugin to `DEFAULT_PLUGINS` in `install.py` if every environment should get it, and to `NEEDS_BINARY` if it runs a binary published as a cargo-dist release. CI validates the manifest, lints `install.py`, and runs `test_install.py`, which also checks that `install.py` names only listed plugins.
