@@ -24,6 +24,19 @@ For each of `claude` and `codex` on PATH it registers the marketplace and instal
 curl -fsSL https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.py | python3 - pr-crucible
 ```
 
+### Windows
+
+In PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.py | python -
+irm https://raw.githubusercontent.com/AbysmalBiscuit/AbysmalBiscuit-agent-plugins/main/install.py | python - pr-crucible
+```
+
+The binaries come from each release's `<name>-installer.ps1`, which installs into `%USERPROFILE%\.cargo\bin` and adds it to the user PATH; open a new terminal before running them. The Claude Code and Codex commands below are the same on Windows.
+
+### Requirements and behavior
+
 It needs Python 3.9 or newer and nothing outside the standard library. The binary downloads, the Claude installs, and the Codex installs run concurrently. Within one CLI, plugins install one at a time: concurrent installs into the same CLI overwrite each other's config writes and silently drop plugins.
 
 The script installs; it does not update. Use the CLI commands below to update.

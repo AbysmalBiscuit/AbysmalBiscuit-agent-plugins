@@ -8,14 +8,17 @@ The README has the curl one-liner that runs it without a checkout.
 
 from __future__ import annotations
 
+import os
 import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -38,9 +41,11 @@ def report(label: str, output: str) -> None:
         print(f"\n$ {label}\n{output}", end="", flush=True)
 
 
-def step(*argv: str, stdin: str | None = None, label: str = "") -> bool:
+def step(*argv: str, label: str = "") -> bool:
+    # Resolving the full path lets Windows run .cmd shims, such as an npm-installed codex.
+    command = [shutil.which(argv[0]) or argv[0], *argv[1:]]
     try:
-        result = subprocess.run(argv, input=stdin, capture_output=True, text=True, check=False)
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
     except OSError as err:
         report(label or shlex.join(argv), f"{err}\n")
         return False
@@ -49,24 +54,30 @@ def step(*argv: str, stdin: str | None = None, label: str = "") -> bool:
 
 
 def install_binaries(plugins: Sequence[str]) -> bool:
-    # One at a time: every cargo-dist installer edits the same ~/.cargo/env and
-    # shell rc files.
+    # A saved file, since Windows can refuse to start `powershell -c "irm ... | iex"`.
+    if os.name == "nt":
+        suffix, runner = ".ps1", ("powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File")
+    else:
+        suffix, runner = ".sh", ("sh",)
     ok = True
+    # One at a time: every cargo-dist installer edits the same PATH setup.
     for name in (plugin for plugin in plugins if plugin in NEEDS_BINARY):
+        label = f"install {name} release binary"
         if shutil.which(name):
-            report(f"install {name} release binary", "already on PATH\n")
+            report(label, "already on PATH\n")
             continue
-        url = (
-            f"https://github.com/AbysmalBiscuit/{name}/releases/latest/download/{name}-installer.sh"
-        )
-        try:
-            with urllib.request.urlopen(url, timeout=60) as response:
-                installer = response.read().decode()
-        except OSError as err:
-            report(f"download {url}", f"{err}\n")
-            ok = False
-            continue
-        ok &= step("sh", stdin=installer, label=f"install {name} release binary")
+        installer = f"{name}-installer{suffix}"
+        url = f"https://github.com/AbysmalBiscuit/{name}/releases/latest/download/{installer}"
+        with tempfile.TemporaryDirectory() as tmp:
+            script = Path(tmp, installer)
+            try:
+                with urllib.request.urlopen(url, timeout=60) as response:
+                    script.write_bytes(response.read())
+            except OSError as err:
+                report(f"download {url}", f"{err}\n")
+                ok = False
+                continue
+            ok &= step(*runner, str(script), label=label)
     return ok
 
 
