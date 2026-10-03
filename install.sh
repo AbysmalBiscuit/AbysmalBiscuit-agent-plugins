@@ -4,7 +4,7 @@
 set -uo pipefail
 
 readonly MARKETPLACE=abysmalbiscuit
-readonly SOURCE=AbysmalBiscuit/AbysmalBiscuit-plugins
+readonly SOURCE=AbysmalBiscuit/AbysmalBiscuit-agent-plugins
 readonly DEFAULT_PLUGINS=(devkit mcpls agent-guard superpowers)
 # Plugins whose MCP servers or hooks need a binary from the plugin repo's releases.
 readonly NEEDS_BINARY=(devkit mcpls)
