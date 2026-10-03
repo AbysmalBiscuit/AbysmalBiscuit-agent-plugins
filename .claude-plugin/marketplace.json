@@ -1,0 +1,50 @@
+{
+  "name": "abysmalbiscuit",
+  "description": "Lev's agent plugins for Claude Code and Codex, plus the third-party ones he uses",
+  "owner": { "name": "Lev Velykoivanenko" },
+  "plugins": [
+    {
+      "name": "devkit",
+      "description": "Local-dev coordination skills for devkit: file locks, ports, dev servers, issue lifecycle",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/AbysmalBiscuit/devkit.git",
+        "path": "plugin"
+      }
+    },
+    {
+      "name": "mcpls",
+      "description": "Language server intelligence and push diagnostics through mcpls",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/AbysmalBiscuit/mcpls.git",
+        "path": "plugin"
+      }
+    },
+    {
+      "name": "agent-guard",
+      "description": "Checks agent tool calls, edits, and changesets against local rules",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/AbysmalBiscuit/agent-guard.git",
+        "path": "plugin"
+      }
+    },
+    {
+      "name": "pr-crucible",
+      "description": "Staged, evidence-backed, adversarial PR review: analyze through lenses, refute findings with real before/after evidence, render a report",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/AbysmalBiscuit/pr-crucible.git"
+      }
+    },
+    {
+      "name": "superpowers",
+      "description": "Core skills library: TDD, debugging, collaboration patterns, and proven techniques",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/obra/superpowers.git"
+      }
+    }
+  ]
+}

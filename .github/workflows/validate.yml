@@ -1,0 +1,31 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate marketplace manifest
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          ~/.local/bin/claude plugin validate .claude-plugin/marketplace.json
+
+      - name: install.sh names only listed plugins
+        run: |
+          eval "$(sed -n -E '/^readonly (DEFAULT_PLUGINS|NEEDS_BINARY)=/p' install.sh)"
+          missing=$(jq -r '$ARGS.positional - [.plugins[].name] | join(" ")' \
+            .claude-plugin/marketplace.json --args "${DEFAULT_PLUGINS[@]}" "${NEEDS_BINARY[@]}")
+          if [[ -n $missing ]]; then
+            echo "::error file=install.sh::not in the marketplace manifest: $missing"
+            exit 1
+          fi
+
+      - name: Lint install.sh
+        run: |
+          shellcheck install.sh
+          go run mvdan.cc/sh/v3/cmd/shfmt@latest -d install.sh
