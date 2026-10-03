@@ -74,4 +74,4 @@ Add the `install.py` line to the environment's setup script.
 
 ## Adding a plugin
 
-Add an entry to `.claude-plugin/marketplace.json`. Use only `git-subdir` (plugin in a subdirectory) or `url` (plugin at the repo root) sources: both CLIs understand them, while Codex skips Claude's `github` source type. Add the plugin to `DEFAULT_PLUGINS` in `install.py` if every environment should get it, and to `NEEDS_BINARY` if it runs a binary published as a cargo-dist release. CI validates the manifest, lints `install.py`, and runs `test_install.py`, which also checks that `install.py` names only listed plugins.
+Add an entry to `.claude-plugin/marketplace.json`. Use only `git-subdir` (plugin in a subdirectory) or `url` (plugin at the repo root) sources: both CLIs understand them, while Codex skips Claude's `github` source type. Add the plugin to `DEFAULT_PLUGINS` in `install.py` if every environment should get it, and to `NEEDS_BINARY` if it runs a binary published as a cargo-dist release. CI validates the manifest, lints `install.py`, and runs `install.test.py`, which also checks that `install.py` names only listed plugins.
