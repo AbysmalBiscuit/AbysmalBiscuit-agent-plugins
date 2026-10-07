@@ -39,14 +39,6 @@
       }
     },
     {
-      "name": "workcell",
-      "description": "Run an issue as a workcell: a manager session with fresh teammate workers",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/AbysmalBiscuit/workcell.git"
-      }
-    },
-    {
       "name": "superpowers",
       "description": "Core skills library: TDD, debugging, collaboration patterns, and proven techniques",
       "source": {
