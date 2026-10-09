@@ -45,6 +45,14 @@
         "source": "url",
         "url": "https://github.com/obra/superpowers.git"
       }
+    },
+    {
+      "name": "images",
+      "description": "Draws pictures in the Claude Code terminal transcript over the kitty graphics protocol",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/AbysmalBiscuit/claude-mod-images.git"
+      }
     }
   ]
 }

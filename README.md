@@ -11,6 +11,7 @@ Each plugin lives in its own repo; this repo only lists them in [`.claude-plugin
 | [agent-guard](https://github.com/AbysmalBiscuit/agent-guard) | yes | Checks agent tool calls, edits, and changesets against local rules |
 | [superpowers](https://github.com/obra/superpowers) | yes | Skills library: TDD, debugging, planning, collaboration workflows |
 | [pr-crucible](https://github.com/AbysmalBiscuit/pr-crucible) | no | Staged, evidence-backed, adversarial PR review |
+| [images](https://github.com/AbysmalBiscuit/claude-mod-images) | no | Draws pictures in the Claude Code terminal transcript over the kitty graphics protocol |
 
 ## Install anywhere: `install.py`
 
